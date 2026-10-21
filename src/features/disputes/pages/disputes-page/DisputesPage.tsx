@@ -5,9 +5,10 @@ import { CONFIG } from '@/config-global';
 import CustomBreadcrumbs from '@/common/components/custom-breadcrumbs';
 import { ErrorFallback } from '@/common/components/error-boundary';
 import { SuperTable, type SuperTableColumn } from '@/common/components/super-table';
+import { PAGE_SIZE_OPTIONS } from '@/common/constants/paging';
 import { getErrorMessage } from '@/lib/apiErrors';
 import { useDisputes } from '../../queries';
-import { PAGE_SIZE_OPTIONS, useDisputeFilters } from '../../hooks/useDisputeFilters';
+import { useDisputeFilters } from '../../hooks/useDisputeFilters';
 import { DisputeTableRow, DisputeTableSkeleton, DisputeTableToolbar, NoDisputes } from '../../components/dispute-table';
 
 /* ========================================================================================= */

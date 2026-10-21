@@ -4,19 +4,14 @@ import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 import CreditCardOutlinedIcon from '@mui/icons-material/CreditCardOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
-import type { AccountType, DisputeTransactionModel } from '@/codegen/api-client';
+import type { DisputeTransactionModel } from '@/codegen/api-client';
+import { ACCOUNT_TYPE_LABELS } from '@/common/constants/accounts';
 import { formatCurrency, formatDateTime } from '@/common/utils/format';
 import { DetailCard } from '../detail-card';
 import { DetailRow } from '../detail-row';
 import { CopyableCode } from '../copyable-code';
 
 /* ==================================================================================== */
-
-const ACCOUNT_TYPE_LABELS: Record<AccountType, string> = {
-  Cheque:     'Cheque',
-  Savings:    'Savings',
-  CreditCard: 'Credit card',
-};
 
 const getInitials = (name: string): string =>
   name
