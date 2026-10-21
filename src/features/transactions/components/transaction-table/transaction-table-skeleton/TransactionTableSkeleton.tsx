@@ -12,7 +12,7 @@ import { SkeletonRow } from './skeleton-row';
 
 /*==========================================================================================================================*/
 
-const HEAD_COLS = ['Date', 'Merchant', 'Account', 'Category', 'Amount', 'Status', 'Dispute'];
+const HEAD_COLS = ['Merchant', 'Date', 'Account', 'Category', 'Amount', 'Status', 'Dispute'];
 const ROW_COUNT = 10;
 
 const TransactionTableSkeleton = () => (

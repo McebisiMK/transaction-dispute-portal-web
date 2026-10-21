@@ -14,8 +14,8 @@ import { NoTransactions, TransactionTableRow, TransactionTableSkeleton, Transact
 /* ========================================================================================= */
 
 const COLUMNS: SuperTableColumn[] = [
-  { id: 'transactionDate', label: 'Date', width: '11%' },
   { id: 'merchant', label: 'Merchant', width: '20%' },
+  { id: 'transactionDate', label: 'Date', width: '11%' },
   { id: 'account', label: 'Account', width: '18%' },
   { id: 'category', label: 'Category', width: '13%' },
   { id: 'amount', label: 'Amount', align: 'right', width: '12%' },

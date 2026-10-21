@@ -18,12 +18,6 @@ interface TransactionTableRowProps {
 const TransactionTableRow = ({ transaction }: TransactionTableRowProps) => (
   <TableRow hover>
     <TableCell>
-      <Typography variant="body2" sx={{ whiteSpace: 'nowrap' }}>
-        {formatDate(transaction.transactionDate)}
-      </Typography>
-    </TableCell>
-
-    <TableCell>
       <Box>
         <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.3 }}>
           {transaction.merchant}
@@ -32,6 +26,12 @@ const TransactionTableRow = ({ transaction }: TransactionTableRowProps) => (
           {transaction.reference}
         </Typography>
       </Box>
+    </TableCell>
+
+    <TableCell>
+      <Typography variant="body2" sx={{ whiteSpace: 'nowrap' }}>
+        {formatDate(transaction.transactionDate)}
+      </Typography>
     </TableCell>
 
     <TableCell>
