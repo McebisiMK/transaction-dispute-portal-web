@@ -1,0 +1,42 @@
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useApiClient } from '@/common/auth';
+import type { DisputeStatus } from '@/codegen/api-client';
+
+/* ========================================================================================= */
+
+export interface DisputeFilters {
+  status?:    DisputeStatus;
+  fromDate?:  string;
+  toDate?:    string;
+  pageNumber: number;
+  pageSize:   number;
+}
+
+export const disputeKeys = {
+  all:     ['disputes'] as const,
+  lists:   () => [...disputeKeys.all, 'list'] as const,
+  list:    (filters: DisputeFilters) => [...disputeKeys.lists(), filters] as const,
+  details: () => [...disputeKeys.all, 'detail'] as const,
+  detail:  (id: string) => [...disputeKeys.details(), id] as const,
+};
+
+/* ========================================================================================= */
+
+export const useDisputes = (filters: DisputeFilters) => {
+  const { disputes } = useApiClient();
+
+  return useQuery({
+    queryKey: disputeKeys.list(filters),
+    queryFn: ({ signal }) => disputes.getDisputes(filters.fromDate, filters.toDate, filters.status, filters.pageNumber, filters.pageSize, signal),
+    placeholderData: keepPreviousData,
+  });
+};
+
+export const useDispute = (id: string) => {
+  const { disputes } = useApiClient();
+
+  return useQuery({
+    queryKey: disputeKeys.detail(id),
+    queryFn: ({ signal }) => disputes.getDisputeById(id, signal),
+  });
+};
