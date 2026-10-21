@@ -11,3 +11,7 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface Window {
+  __APP_CONFIG__?: Partial<Record<'API_BASE_URL' | 'WEB_BASE_URL' | 'KEYCLOAK_AUTHORITY' | 'KEYCLOAK_CLIENT_ID', string>>;
+}
