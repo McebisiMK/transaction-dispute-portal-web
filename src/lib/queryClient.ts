@@ -10,7 +10,9 @@ const shouldRetry = (failureCount: number, error: unknown) =>
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
-    onError: (error) => snackbarError(getErrorMessage(error)),
+    onError: (error, query) => {
+      if (query.state.data !== undefined) snackbarError(getErrorMessage(error));
+    },
   }),
   mutationCache: new MutationCache({
     onError: (error) => snackbarError(getErrorMessage(error)),
