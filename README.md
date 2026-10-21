@@ -52,5 +52,6 @@ src/lib         query client, API error helpers, snackbar
 | Route | Role | Description |
 |---|---|---|
 | `/transactions` | customer | Transactions across the customer's accounts. Search by merchant or reference, filter by status and date, with paging. Each row shows whether it can be disputed, or links to its open dispute. Filters and page are kept while moving around the app, and reset on refresh or sign-out. |
+| `/transactions/:id/dispute` | customer | Dispute a transaction: choose a reason and describe what happened. The same rules as the API are checked first, server errors appear on the matching field, and on success the new dispute opens with its reference. Transactions that can't be disputed explain why, or link to the open dispute. |
 | `/disputes` | customer | Dispute history. Filters by status and submission date, with paging. Filters and page are kept while moving around the app, and reset on refresh or sign-out. |
 | `/disputes/:id` | customer | Dispute details, transaction summary and status timeline. |
