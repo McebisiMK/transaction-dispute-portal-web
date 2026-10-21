@@ -1,28 +1,18 @@
-import { useCallback, useMemo } from 'react';
 import type { DisputeStatus } from '@/codegen/api-client';
-import { useUrlFilters } from '@/common/hooks';
-import { parseOption } from '@/common/utils/searchParams';
-import { DISPUTE_STATUSES } from '../constants';
+import { useFilterStore } from '@/common/hooks';
+import { createFilterStore } from '@/common/utils/filterStore';
 import type { DisputeFilters } from '../queries';
 
 /* ========================================================================================= */
 
-export const useDisputeFilters = () => {
-  const { searchParams, paging, update, setPageSize, setPageNumber } = useUrlFilters();
+const store = createFilterStore<Omit<DisputeFilters, 'pageNumber' | 'pageSize'>>({
+  status:   undefined,
+  fromDate: undefined,
+  toDate:   undefined,
+});
 
-  const filters = useMemo<DisputeFilters>(() => ({
-    status:   parseOption(searchParams.get('status'), DISPUTE_STATUSES),
-    fromDate: searchParams.get('fromDate') ?? undefined,
-    toDate:   searchParams.get('toDate') ?? undefined,
-    ...paging,
-  }), [searchParams, paging]);
+const setStatus   = (status?: DisputeStatus) => store.setFilters({ status });
+const setFromDate = (fromDate?: string) => store.setFilters({ fromDate });
+const setToDate   = (toDate?: string) => store.setFilters({ toDate });
 
-  const setStatus    = useCallback((status?: DisputeStatus) => update({ status }), [update]);
-  const setFromDate  = useCallback((fromDate?: string) => update({ fromDate }), [update]);
-  const setToDate    = useCallback((toDate?: string) => update({ toDate }), [update]);
-  const clearFilters = useCallback(() => update({ status: undefined, fromDate: undefined, toDate: undefined }), [update]);
-
-  const isFiltered = !!filters.status || !!filters.fromDate || !!filters.toDate;
-
-  return { filters, isFiltered, setStatus, setFromDate, setToDate, setPageSize, setPageNumber, clearFilters };
-};
+export const useDisputeFilters = () => ({ ...useFilterStore(store), setStatus, setFromDate, setToDate });

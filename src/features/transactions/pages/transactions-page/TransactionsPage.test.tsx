@@ -47,7 +47,12 @@ const mockTransactions = (items: TransactionModel[], totalCount?: number) => {
   return requests;
 };
 
-const renderPage = (route = '/transactions') => renderWithProviders(<TransactionsPage />, { path: '/transactions', route });
+const renderPage = () => renderWithProviders(<TransactionsPage />, { path: '/transactions' });
+
+const selectStatus = async (status: string) => {
+  await userEvent.click(await screen.findByRole('combobox', { name: 'Status' }));
+  await userEvent.click(within(screen.getByRole('listbox')).getByText(status));
+};
 
 /* ========================================================================================= */
 
@@ -90,47 +95,66 @@ describe('TransactionsPage', () => {
 
   it('searches once the customer stops typing', async () => {
     const requests = mockTransactions([buildTransaction()]);
-    const { router } = renderPage();
+    renderPage();
 
     await userEvent.type(await screen.findByLabelText('Search'), 'uber');
 
-    await waitFor(() => expect(router.state.location.search).toBe('?search=uber'), { timeout: 2000 });
-    await waitFor(() => expect(requests.at(-1)?.searchParams.get('Search')).toBe('uber'));
+    await waitFor(() => expect(requests.at(-1)?.searchParams.get('Search')).toBe('uber'), { timeout: 2000 });
     expect(requests.filter((request) => request.searchParams.has('Search'))).toHaveLength(1);
   });
 
   it('goes back to the first page when the status filter changes', async () => {
     const requests = mockTransactions([buildTransaction()], 30);
-    const { router } = renderPage('/transactions?page=3');
+    renderPage();
 
-    await userEvent.click(await screen.findByRole('combobox', { name: 'Status' }));
-    await userEvent.click(within(screen.getByRole('listbox')).getByText('Pending'));
+    await userEvent.click(await screen.findByRole('button', { name: /next page/i }));
+    await waitFor(() => expect(requests.at(-1)?.searchParams.get('PageNumber')).toBe('2'));
+
+    await selectStatus('Pending');
 
     await waitFor(() => expect(requests.at(-1)?.searchParams.get('Status')).toBe('Pending'));
     expect(requests.at(-1)?.searchParams.get('PageNumber')).toBe('1');
-    expect(router.state.location.search).toBe('?status=Pending');
   });
 
   it('clears the search and filters', async () => {
-    mockTransactions([buildTransaction()]);
-    const { router } = renderPage('/transactions?search=checkers&status=Posted');
+    const requests = mockTransactions([buildTransaction()]);
+    renderPage();
 
-    expect(await screen.findByLabelText('Search')).toHaveValue('checkers');
+    await userEvent.type(await screen.findByLabelText('Search'), 'checkers');
+    await waitFor(() => expect(requests.at(-1)?.searchParams.get('Search')).toBe('checkers'), { timeout: 2000 });
+    await selectStatus('Posted');
+    await waitFor(() => expect(requests.at(-1)?.searchParams.get('Status')).toBe('Posted'));
 
-    await userEvent.click(await screen.findByRole('button', { name: /clear/i }));
+    await userEvent.click(screen.getByRole('button', { name: /clear/i }));
 
-    expect(router.state.location.search).toBe('');
+    await waitFor(() => expect(requests.at(-1)?.searchParams.has('Status')).toBe(false));
+    expect(requests.at(-1)?.searchParams.has('Search')).toBe(false);
     expect(screen.getByLabelText('Search')).toHaveValue('');
   });
 
   it('requests the next page', async () => {
     const requests = mockTransactions([buildTransaction()], 25);
-    const { router } = renderPage();
+    renderPage();
 
     await userEvent.click(await screen.findByRole('button', { name: /next page/i }));
 
     await waitFor(() => expect(requests.at(-1)?.searchParams.get('PageNumber')).toBe('2'));
-    expect(router.state.location.search).toBe('?page=2');
+  });
+
+  it('keeps the filters and page when the customer comes back to the page', async () => {
+    const requests = mockTransactions([buildTransaction()], 30);
+    const { unmount } = renderPage();
+
+    await selectStatus('Pending');
+    await userEvent.click(await screen.findByRole('button', { name: /next page/i }));
+    await waitFor(() => expect(requests.at(-1)?.searchParams.get('PageNumber')).toBe('2'));
+    unmount();
+
+    renderPage();
+
+    expect(await screen.findByRole('combobox', { name: 'Status' })).toHaveTextContent('Pending');
+    await waitFor(() => expect(requests.at(-1)?.searchParams.get('PageNumber')).toBe('2'));
+    expect(requests.at(-1)?.searchParams.get('Status')).toBe('Pending');
   });
 
   it('shows the empty state when the customer has no transactions', async () => {
@@ -143,10 +167,11 @@ describe('TransactionsPage', () => {
 
   it('shows a filtered empty state when nothing matches', async () => {
     mockTransactions([]);
+    renderPage();
 
-    renderPage('/transactions?search=nothing');
+    await userEvent.type(await screen.findByLabelText('Search'), 'nothing');
 
-    expect(await screen.findByText('No transactions found')).toBeInTheDocument();
+    expect(await screen.findByText('No transactions found', {}, { timeout: 2000 })).toBeInTheDocument();
   });
 
   it('shows an error with a retry button when the API fails', async () => {

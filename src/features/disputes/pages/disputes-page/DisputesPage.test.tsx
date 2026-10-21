@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { screen } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import type { DisputeSummaryModel, PaginatedListOfDisputeSummaryModel } from '@/codegen/api-client';
@@ -46,7 +46,7 @@ const mockDisputes = (items: DisputeSummaryModel[]) => {
   return requests;
 };
 
-const renderPage = (route = '/disputes') => renderWithProviders(<DisputesPage />, { path: '/disputes', route });
+const renderPage = () => renderWithProviders(<DisputesPage />, { path: '/disputes' });
 
 /* ========================================================================================= */
 
@@ -62,15 +62,21 @@ describe('DisputesPage', () => {
     expect(screen.getByText('Approved')).toBeInTheDocument();
   });
 
-  it('sends the filters from the URL to the API', async () => {
+  it('sends the chosen status to the API and keeps it when the page is opened again', async () => {
     const requests = mockDisputes([]);
+    const { unmount } = renderPage();
 
-    renderPage('/disputes?status=Approved&fromDate=2026-09-01&page=2');
+    await userEvent.click(await screen.findByRole('combobox', { name: 'Status' }));
+    await userEvent.click(within(screen.getByRole('listbox')).getByText('Approved'));
+
+    await waitFor(() => expect(requests.at(-1)?.searchParams.get('Status')).toBe('Approved'));
+    expect(requests.at(-1)?.searchParams.get('PageNumber')).toBe('1');
+    unmount();
+
+    renderPage();
 
     expect(await screen.findByText('No disputes found')).toBeInTheDocument();
-    expect(requests[0].searchParams.get('Status')).toBe('Approved');
-    expect(requests[0].searchParams.get('FromDate')).toBe('2026-09-01');
-    expect(requests[0].searchParams.get('PageNumber')).toBe('2');
+    expect(requests.at(-1)?.searchParams.get('Status')).toBe('Approved');
   });
 
   it('shows the empty state when the customer has no disputes', async () => {
