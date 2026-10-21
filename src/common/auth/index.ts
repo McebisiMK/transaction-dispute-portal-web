@@ -6,4 +6,5 @@ export { ApiClientProvider }             from './components';
 export { useApiClient }                  from './useApiClient';
 export type { ApiClientContextValue }    from './ApiClientContext';
 export { AuthGuard }                     from './components';
+export { HomeRedirect }                  from './components';
 export { oidcConfig }                    from './authConfig';

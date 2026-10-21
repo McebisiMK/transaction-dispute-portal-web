@@ -1,4 +1,4 @@
-import { Gavel as GavelIcon, ReceiptLong as ReceiptLongIcon } from '@mui/icons-material';
+import { FactCheck as FactCheckIcon, Gavel as GavelIcon, ReceiptLong as ReceiptLongIcon } from '@mui/icons-material';
 import { ROLES } from '@/config-global';
 import type { NavigationItem } from '@/common/types/navigation';
 
@@ -18,5 +18,12 @@ export const NAV_ITEMS: NavigationItem[] = [
     path: '/disputes',
     icon: <GavelIcon fontSize="small" />,
     roles: [ROLES.CUSTOMER],
+  },
+  {
+    id: 'dispute-queue',
+    label: 'Dispute queue',
+    path: '/agent/disputes',
+    icon: <FactCheckIcon fontSize="small" />,
+    roles: [ROLES.AGENT],
   },
 ];
