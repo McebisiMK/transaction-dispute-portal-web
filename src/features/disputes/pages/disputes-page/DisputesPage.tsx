@@ -14,13 +14,13 @@ import { DisputeTableRow, DisputeTableSkeleton, DisputeTableToolbar, NoDisputes 
 /* ========================================================================================= */
 
 const COLUMNS: SuperTableColumn[] = [
-  { id: 'transaction', label: 'Transaction' },
-  { id: 'reference', label: 'Reference' },
-  { id: 'amount', label: 'Amount', align: 'right' },
-  { id: 'reason', label: 'Reason' },
-  { id: 'status', label: 'Status' },
-  { id: 'submittedAt', label: 'Submitted' },
-  { id: 'lastUpdatedAt', label: 'Last updated' },
+  { id: 'transaction', label: 'Transaction', width: '19%' },
+  { id: 'reference', label: 'Reference', width: '14%' },
+  { id: 'amount', label: 'Amount', align: 'right', width: '11%' },
+  { id: 'reason', label: 'Reason', width: '18%', headStyles: { pl: 5 } },
+  { id: 'status', label: 'Status', align: 'center', width: '14%' },
+  { id: 'submittedAt', label: 'Submitted', width: '11%' },
+  { id: 'lastUpdatedAt', label: 'Last updated', width: '11%' },
 ];
 
 const DisputesPage = () => {

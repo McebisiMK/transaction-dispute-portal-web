@@ -46,11 +46,11 @@ const DisputeTableRow = ({ dispute }: DisputeTableRowProps) => {
         </Typography>
       </TableCell>
 
-      <TableCell>
+      <TableCell sx={{ pl: 5 }}>
         <Typography variant="body2">{DISPUTE_REASON_LABELS[dispute.reason]}</Typography>
       </TableCell>
 
-      <TableCell>
+      <TableCell align="center">
         <DisputeStatusChip status={dispute.status} />
       </TableCell>
 

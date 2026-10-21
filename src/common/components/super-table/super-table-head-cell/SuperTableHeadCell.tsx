@@ -27,6 +27,8 @@ const SuperTableHeadCell = ({ column, sortBy, sortDirection, onSortChange }: Sup
           letterSpacing: 0.5,
           color: "text.secondary",
           whiteSpace: "nowrap",
+          width: column.width,
+          minWidth: column.minWidth,
         },
         ...toSxArray(getColumnSx(column, "head")),
         ...toSxArray(column.headStyles),
