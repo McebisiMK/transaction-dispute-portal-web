@@ -22,6 +22,14 @@ const SuperTablePagination = ({ count, page, rowsPerPage, onPageChange, onRowsPe
       onRowsPerPageChange={(e) => onRowsPerPageChange(parseInt(e.target.value, 10))}
       rowsPerPageOptions={rowsPerPageOptions}
       labelRowsPerPage="Items per page:"
+      slotProps={{
+        select: {
+          MenuProps: {
+            anchorOrigin:    { vertical: 'top', horizontal: 'left' },
+            transformOrigin: { vertical: 'bottom', horizontal: 'left' },
+          },
+        },
+      }}
       sx={{ flexShrink: 0, borderTop: '1px solid', borderColor: 'divider' }}
     />
   );
