@@ -30,3 +30,7 @@ export const TRANSACTION_CATEGORY_LABELS: Record<TransactionCategory, string> = 
 };
 
 export const SEARCH_DEBOUNCE_MS = 400;
+
+export const PENDING_DISPUTE_MESSAGE = "Pending transactions can be disputed once they've posted.";
+
+export const CLOSED_DISPUTE_MESSAGE = 'This transaction can no longer be disputed.';

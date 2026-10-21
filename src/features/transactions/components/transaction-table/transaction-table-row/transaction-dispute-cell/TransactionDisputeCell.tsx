@@ -3,17 +3,15 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import GavelIcon from '@mui/icons-material/Gavel';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import type { TransactionModel } from '@/codegen/api-client';
+import { CLOSED_DISPUTE_MESSAGE, PENDING_DISPUTE_MESSAGE } from '../../../../constants';
 
 /* ==================================================================================== */
 
 interface TransactionDisputeCellProps {
   transaction: TransactionModel;
 }
-
-const PENDING_REASON = "Pending transactions can be disputed once they've posted.";
-const CLOSED_REASON  = 'This transaction can no longer be disputed.';
 
 const TransactionDisputeCell = ({ transaction }: TransactionDisputeCellProps) => {
   const { id, merchant, reference, status, isDisputable, openDisputeId } = transaction;
@@ -23,13 +21,14 @@ const TransactionDisputeCell = ({ transaction }: TransactionDisputeCellProps) =>
       <Button
         size="small"
         color="info"
+        variant="outlined"
         component={RouterLink}
         to={`/disputes/${openDisputeId}`}
-        endIcon={<OpenInNewIcon sx={{ fontSize: 16 }} />}
+        startIcon={<VisibilityOutlinedIcon sx={{ fontSize: 16 }} />}
         aria-label={`View dispute for ${merchant} ${reference}`}
         sx={{ whiteSpace: 'nowrap' }}
       >
-        Disputed
+        View dispute
       </Button>
     );
   }
@@ -51,7 +50,7 @@ const TransactionDisputeCell = ({ transaction }: TransactionDisputeCellProps) =>
   }
 
   return (
-    <Tooltip title={status === 'Pending' ? PENDING_REASON : CLOSED_REASON}>
+    <Tooltip title={status === 'Pending' ? PENDING_DISPUTE_MESSAGE : CLOSED_DISPUTE_MESSAGE}>
       <Box component="span" sx={{ display: 'inline-flex' }}>
         <Button size="small" variant="outlined" disabled startIcon={<GavelIcon sx={{ fontSize: 16 }} />} aria-label={`Dispute ${merchant} ${reference}`}>
           Dispute

@@ -33,3 +33,12 @@ export const useTransactions = (filters: TransactionFilters) => {
     placeholderData: keepPreviousData,
   });
 };
+
+export const useTransaction = (id: string) => {
+  const { transactions } = useApiClient();
+
+  return useQuery({
+    queryKey: transactionKeys.detail(id),
+    queryFn: ({ signal }) => transactions.getTransactionById(id, signal),
+  });
+};

@@ -1,6 +1,7 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useApiClient } from '@/common/auth';
-import type { DisputeStatus } from '@/codegen/api-client';
+import type { CreateDisputeCommand, DisputeStatus } from '@/codegen/api-client';
+import { transactionKeys } from '@/features/transactions/queries';
 
 /* ========================================================================================= */
 
@@ -38,5 +39,20 @@ export const useDispute = (id: string) => {
   return useQuery({
     queryKey: disputeKeys.detail(id),
     queryFn: ({ signal }) => disputes.getDisputeById(id, signal),
+  });
+};
+
+export const useCreateDispute = () => {
+  const { disputes } = useApiClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (command: CreateDisputeCommand) => disputes.createDispute(command),
+    meta: { inlineErrors: true },
+    onSuccess: (dispute) => {
+      queryClient.setQueryData(disputeKeys.detail(dispute.id), dispute);
+      queryClient.invalidateQueries({ queryKey: disputeKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: transactionKeys.all });
+    },
   });
 };

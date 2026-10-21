@@ -31,3 +31,7 @@ export const DISPUTE_REASON_LABELS: Record<DisputeReason, string> = {
   RefundNotReceived:          'Refund not received',
   Other:                      'Other',
 };
+
+export const DISPUTE_REASONS = Object.keys(DISPUTE_REASON_LABELS) as DisputeReason[];
+
+export const DISPUTE_DESCRIPTION_MAX_LENGTH = 1000;
