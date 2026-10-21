@@ -31,6 +31,14 @@ npm run codegen
 
 Commit `src/codegen/api-client.ts` with the feature that needs the API change.
 
+## Running tests
+
+```
+npm test
+```
+
+Vitest with Testing Library. API calls are mocked with MSW (`src/test/server.ts`), and `renderWithProviders` wraps a page in the app providers and a memory router.
+
 ## Structure
 
 ```
@@ -43,5 +51,6 @@ src/lib         query client, API error helpers, snackbar
 
 | Route | Role | Description |
 |---|---|---|
+| `/transactions` | customer | Transactions across the customer's accounts. Search by merchant or reference, filter by status and date, with paging. Each row shows whether it can be disputed, or links to its open dispute. Filters and page are kept in the URL. |
 | `/disputes` | customer | Dispute history. Filters by status and submission date, with paging. Filters and page are kept in the URL. |
 | `/disputes/:id` | customer | Dispute details, transaction summary and status timeline. |
