@@ -28,4 +28,20 @@ describe('queryClient', () => {
 
     expect(snackbarError).toHaveBeenCalledWith('Dispute not found');
   });
+
+  it('shows a snackbar when a mutation fails', async () => {
+    const mutation = queryClient.getMutationCache().build(queryClient, { mutationFn: () => Promise.reject(notFound()) });
+
+    await mutation.execute(undefined).catch(() => {});
+
+    expect(snackbarError).toHaveBeenCalledWith('Dispute not found');
+  });
+
+  it('leaves mutation errors to a form that shows them inline', async () => {
+    const mutation = queryClient.getMutationCache().build(queryClient, { mutationFn: () => Promise.reject(notFound()), meta: { inlineErrors: true } });
+
+    await mutation.execute(undefined).catch(() => {});
+
+    expect(snackbarError).not.toHaveBeenCalled();
+  });
 });

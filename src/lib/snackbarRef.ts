@@ -12,3 +12,6 @@ export const setEnqueueSnackbar = (fn: EnqueueSnackbar) => {
 
 export const snackbarError = (message: string) =>
   _enqueue(message, { variant: "error" });
+
+export const snackbarSuccess = (message: string) =>
+  _enqueue(message, { variant: "success" });

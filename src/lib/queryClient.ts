@@ -4,6 +4,12 @@ import { snackbarError } from './snackbarRef';
 
 /* =========================================================== */
 
+declare module '@tanstack/react-query' {
+  interface Register {
+    mutationMeta: { inlineErrors?: boolean };
+  }
+}
+
 // 4xx responses won't change on retry; only retry network and server errors.
 const shouldRetry = (failureCount: number, error: unknown) =>
   failureCount < 2 && !(isApiException(error) && error.status >= 400 && error.status < 500);
@@ -15,7 +21,9 @@ export const queryClient = new QueryClient({
     },
   }),
   mutationCache: new MutationCache({
-    onError: (error) => snackbarError(getErrorMessage(error)),
+    onError: (error, _variables, _context, mutation) => {
+      if (!mutation.meta?.inlineErrors) snackbarError(getErrorMessage(error));
+    },
   }),
   defaultOptions: {
     queries: {
