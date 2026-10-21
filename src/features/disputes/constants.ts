@@ -35,3 +35,5 @@ export const DISPUTE_REASON_LABELS: Record<DisputeReason, string> = {
 export const DISPUTE_REASONS = Object.keys(DISPUTE_REASON_LABELS) as DisputeReason[];
 
 export const DISPUTE_DESCRIPTION_MAX_LENGTH = 1000;
+
+export const DISPUTE_COMMENT_MAX_LENGTH = 1000;

@@ -3,16 +3,21 @@ import { Link as RouterLink, useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
+import UndoIcon from '@mui/icons-material/Undo';
 import { CONFIG } from '@/config-global';
 import CustomBreadcrumbs from '@/common/components/custom-breadcrumbs';
+import { useDialog } from '@/common/components/dialogs';
 import { ErrorFallback } from '@/common/components/error-boundary';
 import { NoData } from '@/common/components/super-table';
 import { getErrorMessage, isApiException } from '@/lib/apiErrors';
-import { useDispute } from '../../queries';
+import { snackbarSuccess } from '@/lib/snackbarRef';
+import { useDispute, useWithdrawDispute } from '../../queries';
 import { DisputeTimeline } from '../../components/dispute-timeline';
+import { WithdrawDisputeDialog } from '../../components/withdraw-dispute-dialog';
 import { DetailCard, DisputeDetailsSkeleton, DisputeSummaryCard, TransactionSummaryCard } from '../../components/dispute-details';
 
 /* ========================================================================================= */
@@ -21,6 +26,25 @@ const DisputeDetailsPage = () => {
   const { id = '' } = useParams<{ id: string }>();
   const { data: dispute, isPending, isError, error, refetch } = useDispute(id);
   const isNotFound = isApiException(error) && error.status === 404;
+  const withdrawDispute = useWithdrawDispute(id);
+  const { showDialog } = useDialog();
+
+  const handleWithdraw = (reference: string) => {
+    const modal = showDialog(WithdrawDisputeDialog, {
+      reference,
+      onConfirmClick: (comment?: string) => {
+        modal.update({ isLoading: true, error: undefined });
+        withdrawDispute.mutate(comment, {
+          onSuccess: () => {
+            modal.hide();
+            snackbarSuccess(`Dispute ${reference} withdrawn.`);
+          },
+          onError: (withdrawError) => modal.update({ isLoading: false, error: getErrorMessage(withdrawError) }),
+        });
+      },
+      onCancelClick: () => modal.hide(),
+    });
+  };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -33,9 +57,16 @@ const DisputeDetailsPage = () => {
           heading={dispute?.reference ?? 'Dispute'}
           links={[{ name: 'Disputes' }, { name: 'History', href: '/disputes' }, { name: dispute?.reference ?? 'Details' }]}
           action={
-            <Button component={RouterLink} to="/disputes" variant="outlined" startIcon={<ArrowBackIcon />}>
-              Back to disputes
-            </Button>
+            <Stack direction="row" spacing={1.5}>
+              {dispute?.status === 'Submitted' && (
+                <Button variant="outlined" color="error" startIcon={<UndoIcon />} onClick={() => handleWithdraw(dispute.reference)}>
+                  Withdraw dispute
+                </Button>
+              )}
+              <Button component={RouterLink} to="/disputes" variant="outlined" startIcon={<ArrowBackIcon />}>
+                Back to disputes
+              </Button>
+            </Stack>
           }
         />
       </Box>

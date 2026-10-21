@@ -56,3 +56,19 @@ export const useCreateDispute = () => {
     },
   });
 };
+
+export const useWithdrawDispute = (id: string) => {
+  const { disputes } = useApiClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (comment?: string) => disputes.withdrawDispute(id, { comment }),
+    meta: { inlineErrors: true },
+    onSuccess: (dispute) => {
+      queryClient.setQueryData(disputeKeys.detail(id), dispute);
+      queryClient.invalidateQueries({ queryKey: disputeKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: transactionKeys.all });
+    },
+    onError: () => queryClient.invalidateQueries({ queryKey: disputeKeys.detail(id) }),
+  });
+};
