@@ -8,9 +8,19 @@ React front end for the Transaction Dispute Portal API (`../TransactionDisputePo
 | API calls | NSwag-generated fetch client (`src/codegen/api-client.ts`) |
 | Data fetching | TanStack Query |
 
+## Running with Docker
+
+The full stack (web app, API, Keycloak, SQL Server) runs from the API repository. Clone it next to this one, then from `../TransactionDisputePortal`:
+
+```
+docker compose up -d --build
+```
+
+The image builds the app with Node and serves it with nginx on port 80 (mapped to 3000), falling back to `index.html` for client-side routes. At start-up the container writes `config.js` from the `API_BASE_URL`, `WEB_BASE_URL`, `KEYCLOAK_AUTHORITY` and `KEYCLOAK_CLIENT_ID` environment variables, so one image runs in any environment. An unset variable falls back to the value from `environments/.env.production` built into the bundle.
+
 ## Running locally
 
-Start the API stack first (from `../TransactionDisputePortal`: `docker compose up -d --build`), then:
+Start the API stack without the web container first (from `../TransactionDisputePortal`: `docker compose up -d --build api`), then:
 
 ```
 npm install
