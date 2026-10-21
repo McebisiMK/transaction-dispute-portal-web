@@ -9,6 +9,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { enZA } from 'date-fns/locale';
 import { AgentDisputesClient, DisputesClient, TransactionsClient, type ApiClientConfig } from '@/codegen/api-client';
 import { ApiClientContext, type ApiClientContextValue } from '@/common/auth/ApiClientContext';
+import DialogProvider from '@/common/components/dialogs';
 import { API_CONFIG } from '@/config-global';
 import { AppThemeProvider, ThemeSettings } from '@/theme';
 
@@ -41,7 +42,9 @@ export const renderWithProviders = (ui: ReactElement, { path = '/', route = path
             <ApiClientContext.Provider value={createApiClients()}>
               <QueryClientProvider client={queryClient}>
                 <HelmetProvider>
-                  <RouterProvider router={router} />
+                  <DialogProvider>
+                    <RouterProvider router={router} />
+                  </DialogProvider>
                 </HelmetProvider>
               </QueryClientProvider>
             </ApiClientContext.Provider>
