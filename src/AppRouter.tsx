@@ -9,6 +9,7 @@ import { AuthGuard } from "./common/auth";
 /* ======================================================================== */
 
 const NotFoundPage       = lazy(() => import("@/common/pages/not-found-page").then((m) => ({ default: m.NotFoundPage })));
+const TransactionsPage   = lazy(() => import("@/features/transactions/pages/transactions-page").then((m) => ({ default: m.TransactionsPage })));
 const DisputesPage       = lazy(() => import("@/features/disputes/pages/disputes-page").then((m) => ({ default: m.DisputesPage })));
 const DisputeDetailsPage = lazy(() => import("@/features/disputes/pages/dispute-details-page").then((m) => ({ default: m.DisputeDetailsPage })));
 
@@ -23,7 +24,19 @@ export const AppRouter = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/disputes" replace />,
+        element: <Navigate to="/transactions" replace />,
+      },
+      {
+        path: "transactions",
+        element: (
+          <AuthGuard requiredRoles={[ROLES.CUSTOMER]}>
+            <ErrorBoundary>
+              <Suspense fallback={<PageLoader />}>
+                <TransactionsPage />
+              </Suspense>
+            </ErrorBoundary>
+          </AuthGuard>
+        ),
       },
       {
         path: "disputes",
