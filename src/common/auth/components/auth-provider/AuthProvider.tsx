@@ -47,7 +47,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = useCallback(async () => {
     if (isOnline) {
-      await signinRedirect().catch(console.error);
+      await signinRedirect({ redirect_uri: window.location.origin + window.location.pathname }).catch(console.error);
     }
   }, [signinRedirect, isOnline]);
 
