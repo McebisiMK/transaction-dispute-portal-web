@@ -3,7 +3,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import type { DisputeModel } from '@/codegen/api-client';
 import { formatDateTime } from '@/common/utils/format';
 import { DisputeStatusChip } from '../../dispute-status-chip';
-import { DISPUTE_REASON_LABELS } from '../../../constants';
+import { getLookupName, useDisputeReasons } from '@/common/lookups';
 import { DetailCard } from '../detail-card';
 import { DetailRow } from '../detail-row';
 import { CopyableCode } from '../copyable-code';
@@ -15,6 +15,7 @@ interface DisputeSummaryCardProps {
 }
 
 const DisputeSummaryCard = ({ dispute }: DisputeSummaryCardProps) => {
+  const reasons = useDisputeReasons();
   const lastChange = dispute.timeline.at(-1);
 
   return (
@@ -31,7 +32,7 @@ const DisputeSummaryCard = ({ dispute }: DisputeSummaryCardProps) => {
     >
       <DetailRow label="Reference" value={<CopyableCode value={dispute.reference} />} />
       <DetailRow label="Status" value={<DisputeStatusChip status={dispute.status} />} />
-      <DetailRow label="Reason" value={DISPUTE_REASON_LABELS[dispute.reason]} />
+      <DetailRow label="Reason" value={getLookupName(reasons, dispute.reason)} />
       <DetailRow label="Description" value={dispute.description || '—'} block />
       <DetailRow label="Submitted" value={formatDateTime(dispute.submittedAt)} />
     </DetailCard>

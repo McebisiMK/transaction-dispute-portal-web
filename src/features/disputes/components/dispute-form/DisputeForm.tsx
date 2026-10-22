@@ -5,7 +5,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import type { DisputeReason } from '@/codegen/api-client';
-import { DISPUTE_DESCRIPTION_MAX_LENGTH, DISPUTE_REASON_LABELS, DISPUTE_REASONS } from '../../constants';
+import { useDisputeReasons } from '@/common/lookups';
+import { DISPUTE_DESCRIPTION_MAX_LENGTH } from '../../constants';
 
 /* ==================================================================================== */
 
@@ -30,6 +31,7 @@ const DisputeForm = ({ isSubmitting = false, error, fieldErrors = {}, onSubmit, 
   const [reason, setReason] = useState<DisputeReason | ''>('');
   const [description, setDescription] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const reasons = useDisputeReasons();
 
   const reasonError      = (submitted && !reason ? REASON_REQUIRED : undefined) ?? fieldErrors.reason;
   const descriptionError = (submitted && reason === 'Other' && !description.trim() ? DESCRIPTION_REQUIRED : undefined) ?? fieldErrors.description;
@@ -58,9 +60,9 @@ const DisputeForm = ({ isSubmitting = false, error, fieldErrors = {}, onSubmit, 
           onEdit?.();
         }}
       >
-        {DISPUTE_REASONS.map((option) => (
-          <MenuItem key={option} value={option}>
-            {DISPUTE_REASON_LABELS[option]}
+        {reasons.map((option) => (
+          <MenuItem key={option.id} value={option.id}>
+            {option.name}
           </MenuItem>
         ))}
       </TextField>

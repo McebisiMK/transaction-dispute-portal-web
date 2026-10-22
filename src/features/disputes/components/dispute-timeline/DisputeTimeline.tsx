@@ -10,7 +10,8 @@ import UndoRoundedIcon from '@mui/icons-material/UndoRounded';
 import type { DisputeStatus, DisputeStatusHistoryModel } from '@/codegen/api-client';
 import { formatDateTime } from '@/common/utils/format';
 import { DisputeStatusChip } from '../dispute-status-chip';
-import { DISPUTE_STATUS_COLORS, DISPUTE_STATUS_LABELS } from '../../constants';
+import { getLookupName, useDisputeStatuses } from '@/common/lookups';
+import { DISPUTE_STATUS_COLORS } from '../../constants';
 import { insetSx } from '../../styles';
 
 /* ==================================================================================== */
@@ -30,6 +31,7 @@ interface DisputeTimelineProps {
 }
 
 const DisputeTimeline = ({ timeline }: DisputeTimelineProps) => {
+  const statuses = useDisputeStatuses();
   const entries = [...timeline].reverse();
 
   return (
@@ -72,7 +74,7 @@ const DisputeTimeline = ({ timeline }: DisputeTimelineProps) => {
                       component="span"
                       sx={[{ typography: 'caption', fontWeight: 600, px: 1, py: 0.25, borderRadius: 0.75 }, insetSx]}
                     >
-                      {DISPUTE_STATUS_LABELS[entry.fromStatus]}
+                      {getLookupName(statuses, entry.fromStatus)}
                     </Box>
                   </>
                 )}

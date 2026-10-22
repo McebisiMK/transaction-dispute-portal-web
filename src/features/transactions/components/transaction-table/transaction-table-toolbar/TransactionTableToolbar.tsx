@@ -11,7 +11,8 @@ import { isValid } from 'date-fns';
 import type { TransactionStatus } from '@/codegen/api-client';
 import { useDebouncedValue } from '@/common/hooks';
 import { fromApiDate, toApiDate } from '@/common/utils/format';
-import { SEARCH_DEBOUNCE_MS, TRANSACTION_STATUSES, TRANSACTION_STATUS_LABELS } from '../../../constants';
+import { useTransactionStatuses } from '@/common/lookups';
+import { SEARCH_DEBOUNCE_MS } from '../../../constants';
 
 /* ========================================================================================================================================= */
 
@@ -33,6 +34,7 @@ const ANY = 'Any';
 const toFilterDate = (value: Date | null): string | undefined => (value && isValid(value) ? toApiDate(value) : undefined);
 
 const TransactionTableToolbar = ({ search = '', status, fromDate, toDate, isFiltered, onSearchChange, onStatusChange, onFromChange, onToChange, onClear }: TransactionTableToolbarProps) => {
+  const statuses = useTransactionStatuses();
   const [input, setInput] = useState(search);
   const [lastSearch, setLastSearch] = useState(search);
   const debounced = useDebouncedValue(input.trim(), SEARCH_DEBOUNCE_MS);
@@ -78,9 +80,9 @@ const TransactionTableToolbar = ({ search = '', status, fromDate, toDate, isFilt
         sx={{ flex: 1, minWidth: 160, bgcolor: 'background.paper' }}
       >
         <MenuItem value={ANY}>Any status</MenuItem>
-        {TRANSACTION_STATUSES.map((s) => (
-          <MenuItem key={s} value={s}>
-            {TRANSACTION_STATUS_LABELS[s]}
+        {statuses.map((s) => (
+          <MenuItem key={s.id} value={s.id}>
+            {s.name}
           </MenuItem>
         ))}
       </TextField>

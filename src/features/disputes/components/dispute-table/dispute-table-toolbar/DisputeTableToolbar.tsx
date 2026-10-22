@@ -7,7 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { isValid } from 'date-fns';
 import type { DisputeStatus } from '@/codegen/api-client';
 import { fromApiDate, toApiDate } from '@/common/utils/format';
-import { DISPUTE_STATUSES, DISPUTE_STATUS_LABELS } from '../../../constants';
+import { useDisputeStatuses } from '@/common/lookups';
 
 /* ========================================================================================================================================= */
 
@@ -26,6 +26,7 @@ const ANY = 'Any';
 const toFilterDate = (value: Date | null): string | undefined => (value && isValid(value) ? toApiDate(value) : undefined);
 
 const DisputeTableToolbar = ({ status, fromDate, toDate, isFiltered, onStatusChange, onFromChange, onToChange, onClear }: DisputeTableToolbarProps) => {
+  const statuses = useDisputeStatuses();
   const from = fromApiDate(fromDate ?? null);
   const to = fromApiDate(toDate ?? null);
 
@@ -40,9 +41,9 @@ const DisputeTableToolbar = ({ status, fromDate, toDate, isFiltered, onStatusCha
         sx={{ flex: 1, minWidth: 180, bgcolor: 'background.paper' }}
       >
         <MenuItem value={ANY}>Any status</MenuItem>
-        {DISPUTE_STATUSES.map((s) => (
-          <MenuItem key={s} value={s}>
-            {DISPUTE_STATUS_LABELS[s]}
+        {statuses.map((s) => (
+          <MenuItem key={s.id} value={s.id}>
+            {s.name}
           </MenuItem>
         ))}
       </TextField>

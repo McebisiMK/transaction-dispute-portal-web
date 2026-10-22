@@ -1,7 +1,8 @@
 import type { ChipProps } from '@mui/material/Chip';
 import type { DisputeStatus } from '@/codegen/api-client';
 import { StatusChip } from '@/common/components/status-chip';
-import { DISPUTE_STATUS_COLORS, DISPUTE_STATUS_LABELS } from '../../constants';
+import { getLookupName, useDisputeStatuses } from '@/common/lookups';
+import { DISPUTE_STATUS_COLORS } from '../../constants';
 
 /* ==================================================================================== */
 
@@ -10,9 +11,11 @@ interface DisputeStatusChipProps {
   size?:  ChipProps['size'];
 }
 
-const DisputeStatusChip = ({ status, size }: DisputeStatusChipProps) => (
-  <StatusChip label={DISPUTE_STATUS_LABELS[status]} color={DISPUTE_STATUS_COLORS[status]} size={size} />
-);
+const DisputeStatusChip = ({ status, size }: DisputeStatusChipProps) => {
+  const statuses = useDisputeStatuses();
+
+  return <StatusChip label={getLookupName(statuses, status)} color={DISPUTE_STATUS_COLORS[status]} size={size} />;
+};
 
 /* ==================================================================================== */
 

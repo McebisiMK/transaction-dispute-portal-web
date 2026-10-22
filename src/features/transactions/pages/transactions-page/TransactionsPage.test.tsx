@@ -152,7 +152,8 @@ describe('TransactionsPage', () => {
 
     renderPage();
 
-    expect(await screen.findByRole('combobox', { name: 'Status' })).toHaveTextContent('Pending');
+    const status = await screen.findByRole('combobox', { name: 'Status' });
+    await waitFor(() => expect(status).toHaveTextContent('Pending'));
     await waitFor(() => expect(requests.at(-1)?.searchParams.get('PageNumber')).toBe('2'));
     expect(requests.at(-1)?.searchParams.get('Status')).toBe('Pending');
   });

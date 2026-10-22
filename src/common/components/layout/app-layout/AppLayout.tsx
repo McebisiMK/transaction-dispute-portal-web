@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { useAuth } from "@/common/auth/useAuth";
+import { useLookups } from "@/common/lookups";
 import { Topbar } from "../topbar";
 import { Sidebar } from "../sidebar";
 import type { NavigationItem } from "@/common/types/navigation";
@@ -21,6 +22,7 @@ export interface AppLayoutProps {
 
 const AppLayout = ({ navItems, userRoles, profile: profileProp, title, topBarActions, }: AppLayoutProps) => {
   const { account, roles, logout } = useAuth();
+  useLookups();
   const profile = profileProp ?? {
     name:  account?.name ?? '',
     email: account?.email ?? '',

@@ -1,7 +1,8 @@
 import type { ChipProps } from '@mui/material/Chip';
 import type { TransactionStatus } from '@/codegen/api-client';
 import { StatusChip } from '@/common/components/status-chip';
-import { TRANSACTION_STATUS_COLORS, TRANSACTION_STATUS_LABELS } from '../../constants';
+import { getLookupName, useTransactionStatuses } from '@/common/lookups';
+import { TRANSACTION_STATUS_COLORS } from '../../constants';
 
 /* ==================================================================================== */
 
@@ -10,9 +11,11 @@ interface TransactionStatusChipProps {
   size?:  ChipProps['size'];
 }
 
-const TransactionStatusChip = ({ status, size }: TransactionStatusChipProps) => (
-  <StatusChip label={TRANSACTION_STATUS_LABELS[status]} color={TRANSACTION_STATUS_COLORS[status]} size={size} />
-);
+const TransactionStatusChip = ({ status, size }: TransactionStatusChipProps) => {
+  const statuses = useTransactionStatuses();
+
+  return <StatusChip label={getLookupName(statuses, status)} color={TRANSACTION_STATUS_COLORS[status]} size={size} />;
+};
 
 /* ==================================================================================== */
 

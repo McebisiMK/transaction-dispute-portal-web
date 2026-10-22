@@ -1,6 +1,6 @@
 import { type ReactNode, useMemo } from 'react';
 import { API_CONFIG } from '@/config-global';
-import { AgentDisputesClient, DisputesClient, TransactionsClient, type ApiClientConfig } from '@/codegen/api-client';
+import { AgentDisputesClient, DisputesClient, LookupsClient, TransactionsClient, type ApiClientConfig } from '@/codegen/api-client';
 import { ApiClientContext } from '../../ApiClientContext';
 import { useAuth } from '../../useAuth';
 
@@ -24,6 +24,7 @@ const ApiClientProvider = ({ children }: { children: ReactNode }) => {
       transactions:  new TransactionsClient(config, API_CONFIG.BASE_URL, http),
       disputes:      new DisputesClient(config, API_CONFIG.BASE_URL, http),
       agentDisputes: new AgentDisputesClient(config, API_CONFIG.BASE_URL, http),
+      lookups:       new LookupsClient(config, API_CONFIG.BASE_URL, http),
     };
   }, [getTokenSilently]);
 

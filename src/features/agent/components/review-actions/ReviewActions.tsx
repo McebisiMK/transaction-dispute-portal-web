@@ -11,7 +11,8 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import type { DisputeStatus } from '@/codegen/api-client';
-import { DISPUTE_COMMENT_MAX_LENGTH, DISPUTE_STATUS_LABELS } from '@/features/disputes/constants';
+import { getLookupName, useDisputeStatuses } from '@/common/lookups';
+import { DISPUTE_COMMENT_MAX_LENGTH } from '@/features/disputes/constants';
 
 /* ==================================================================================== */
 
@@ -34,12 +35,13 @@ const ReviewActions = ({ status, isSubmitting = false, error, commentError, onSt
   const [outcome, setOutcome] = useState<DisputeOutcome | ''>('');
   const [comment, setComment] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const statuses = useDisputeStatuses();
 
   if (status !== 'Submitted' && status !== 'UnderReview') {
     return (
       <Stack spacing={2} sx={{ py: 2 }}>
         {error && <Alert severity="warning">{error}</Alert>}
-        <Alert severity="info">This dispute is {DISPUTE_STATUS_LABELS[status].toLowerCase()}. No further action is needed.</Alert>
+        <Alert severity="info">This dispute is {getLookupName(statuses, status).toLowerCase()}. No further action is needed.</Alert>
       </Stack>
     );
   }

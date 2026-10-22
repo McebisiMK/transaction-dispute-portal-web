@@ -3,13 +3,6 @@ import type { TransactionCategory, TransactionStatus } from '@/codegen/api-clien
 
 /* ========================================================================================= */
 
-export const TRANSACTION_STATUSES: TransactionStatus[] = ['Pending', 'Posted'];
-
-export const TRANSACTION_STATUS_LABELS: Record<TransactionStatus, string> = {
-  Pending: 'Pending',
-  Posted:  'Posted',
-};
-
 export const TRANSACTION_STATUS_COLORS: Record<TransactionStatus, ChipProps['color']> = {
   Pending: 'warning',
   Posted:  'success',

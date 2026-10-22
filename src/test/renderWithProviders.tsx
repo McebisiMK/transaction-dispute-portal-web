@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { enZA } from 'date-fns/locale';
-import { AgentDisputesClient, DisputesClient, TransactionsClient, type ApiClientConfig } from '@/codegen/api-client';
+import { AgentDisputesClient, DisputesClient, LookupsClient, TransactionsClient, type ApiClientConfig } from '@/codegen/api-client';
 import { ApiClientContext, type ApiClientContextValue } from '@/common/auth/ApiClientContext';
 import DialogProvider from '@/common/components/dialogs';
 import { API_CONFIG } from '@/config-global';
@@ -27,6 +27,7 @@ const createApiClients = (): ApiClientContextValue => {
     transactions:  new TransactionsClient(config, API_CONFIG.BASE_URL),
     disputes:      new DisputesClient(config, API_CONFIG.BASE_URL),
     agentDisputes: new AgentDisputesClient(config, API_CONFIG.BASE_URL),
+      lookups:       new LookupsClient(config, API_CONFIG.BASE_URL),
   };
 };
 

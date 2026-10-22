@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import type { CreateDisputeCommand, DisputeModel, TransactionModel } from '@/codegen/api-client';
 import { renderWithProviders } from '@/test/renderWithProviders';
-import { apiUrl, server } from '@/test/server';
+import { apiUrl, lookups, server } from '@/test/server';
 import CreateDisputePage from './CreateDisputePage';
 
 /* ========================================================================================= */
@@ -62,6 +62,21 @@ describe('CreateDisputePage', () => {
 
     expect(screen.getByText('Choose why you are disputing this transaction.')).toBeInTheDocument();
     expect(bodies).toHaveLength(0);
+  });
+
+  it('offers the reasons from the lookups API', async () => {
+    mockTransaction();
+    server.use(
+      http.get(apiUrl('/lookups'), () =>
+        HttpResponse.json({ ...lookups, disputeReasons: [{ id: 'DuplicateCharge', name: 'Charged twice by the merchant' }] }),
+      ),
+    );
+
+    renderPage();
+    await userEvent.click(await screen.findByRole('combobox', { name: /reason/i }));
+
+    const options = within(screen.getByRole('listbox')).getAllByRole('option');
+    expect(options.map((option) => option.textContent)).toEqual(['Charged twice by the merchant']);
   });
 
   it('needs a description when the reason is Other', async () => {

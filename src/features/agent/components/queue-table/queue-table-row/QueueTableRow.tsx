@@ -9,7 +9,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import type { DisputeQueueItemModel } from '@/codegen/api-client';
 import { formatCurrency, formatDate } from '@/common/utils/format';
 import { DisputeStatusChip } from '@/features/disputes/components/dispute-status-chip';
-import { DISPUTE_REASON_LABELS } from '@/features/disputes/constants';
+import { getLookupName, useDisputeReasons } from '@/common/lookups';
 
 /* ==================================================================================== */
 
@@ -19,6 +19,7 @@ interface QueueTableRowProps {
 
 const QueueTableRow = ({ dispute }: QueueTableRowProps) => {
   const navigate = useNavigate();
+  const reasons = useDisputeReasons();
   const openDispute = () => navigate(`/agent/disputes/${dispute.id}`);
 
   return (
@@ -51,7 +52,7 @@ const QueueTableRow = ({ dispute }: QueueTableRowProps) => {
       </TableCell>
 
       <TableCell sx={{ pl: 5 }}>
-        <Typography variant="body2">{DISPUTE_REASON_LABELS[dispute.reason]}</Typography>
+        <Typography variant="body2">{getLookupName(reasons, dispute.reason)}</Typography>
       </TableCell>
 
       <TableCell align="center">
