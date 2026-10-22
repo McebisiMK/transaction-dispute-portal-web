@@ -56,7 +56,7 @@ const WithdrawDisputeDialog = ({ reference, isLoading = false, error, onConfirmC
 
       <DialogActions sx={{ px: 3, py: 2 }}>
         <Button variant="outlined" disabled={isLoading} onClick={onCancelClick}>
-          Keep dispute
+          Cancel
         </Button>
         <Button variant="contained" color="error" loading={isLoading} onClick={() => onConfirmClick(comment.trim() || undefined)}>
           Withdraw

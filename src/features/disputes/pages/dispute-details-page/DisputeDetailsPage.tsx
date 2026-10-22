@@ -60,11 +60,11 @@ const DisputeDetailsPage = () => {
             <Stack direction="row" spacing={1.5}>
               {dispute?.status === 'Submitted' && (
                 <Button variant="outlined" color="error" startIcon={<UndoIcon />} onClick={() => handleWithdraw(dispute.reference)}>
-                  Withdraw dispute
+                  Withdraw
                 </Button>
               )}
               <Button component={RouterLink} to="/disputes" variant="outlined" startIcon={<ArrowBackIcon />}>
-                Back to disputes
+                Back
               </Button>
             </Stack>
           }

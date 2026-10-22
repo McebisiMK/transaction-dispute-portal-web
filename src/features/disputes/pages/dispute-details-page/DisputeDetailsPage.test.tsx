@@ -56,7 +56,7 @@ const mockWithdraw = (response: () => Response) => {
 const renderPage = () => renderWithProviders(<DisputeDetailsPage />, { path: '/disputes/:id', route: '/disputes/d1' });
 
 const openWithdrawDialog = async () => {
-  await userEvent.click(await screen.findByRole('button', { name: /withdraw dispute/i }));
+  await userEvent.click(await screen.findByRole('button', { name: 'Withdraw' }));
   return screen.findByRole('dialog');
 };
 
@@ -80,7 +80,7 @@ describe('DisputeDetailsPage', () => {
     renderPage();
 
     expect(await screen.findByText('Under review')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /withdraw dispute/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Withdraw' })).not.toBeInTheDocument();
   });
 
   it('withdraws the dispute with a comment', async () => {
@@ -96,7 +96,7 @@ describe('DisputeDetailsPage', () => {
     expect(bodies).toEqual([{ comment: 'Merchant refunded me' }]);
     expect(screen.getAllByText('Withdrawn').length).toBeGreaterThan(0);
     expect(screen.getByText('Merchant refunded me')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /withdraw dispute/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Withdraw' })).not.toBeInTheDocument();
   });
 
   it('keeps the dialog open with the error when withdraw is rejected', async () => {
@@ -121,7 +121,7 @@ describe('DisputeDetailsPage', () => {
 
     renderPage();
     const dialog = await openWithdrawDialog();
-    await userEvent.click(within(dialog).getByRole('button', { name: /keep dispute/i }));
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(bodies).toHaveLength(0);

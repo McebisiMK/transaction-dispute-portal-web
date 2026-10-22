@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import Paper from "@mui/material/Paper";
 import Skeleton from "@mui/material/Skeleton";
@@ -10,7 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { SuperTableHeadCell } from "./super-table-head-cell";
 import type { SuperTableColumn } from "./types";
-import { headerCellSx, getColumnSx } from "./superTableUtils";
+import { headerCellSx, getColumnSx, getScrollContainerSx } from "./superTableUtils";
 import { SuperTablePagination } from "./super-table-pagination";
 
 /* ============================================================================================ */
@@ -41,6 +41,23 @@ const SuperTable = ({ columns, count, page, rowsPerPage, onPageChange, onRowsPer
   const showSelection = !hideSelection;
   const colspan = columns.length + (showSelection ? 1 : 0) + (hasActions ? 1 : 0);
   const hasRows = !loading && count > 0;
+  const headRef = useRef<HTMLTableSectionElement>(null);
+  const [headHeight, setHeadHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    const head = headRef.current;
+    if (!head) return;
+
+    const measure = () => setHeadHeight(head.offsetHeight);
+    measure();
+
+    if (typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(measure);
+    observer.observe(head);
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <Paper
@@ -59,9 +76,9 @@ const SuperTable = ({ columns, count, page, rowsPerPage, onPageChange, onRowsPer
             : "0 4px 16px 0 rgba(0,0,0,0.10), 0 1px 4px 0 rgba(0,0,0,0.06)",
       }}
     >
-      <TableContainer sx={{ flex: 1, overflow: "auto" }}>
+      <TableContainer sx={getScrollContainerSx(headHeight)}>
         <Table stickyHeader>
-          <TableHead>
+          <TableHead ref={headRef}>
             <TableRow>
               {showSelection && (
                 <TableCell padding="checkbox" sx={headerCellSx}>

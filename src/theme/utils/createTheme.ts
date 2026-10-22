@@ -17,5 +17,5 @@ const baseOptions: ThemeOptions = {
 
 /** Merge base token defaults with per-theme overrides to produce a full MUI Theme. */
 export const buildTheme = (options: ThemeOptions): Theme => {
-  return muiCreateTheme(baseOptions, options);
+  return muiCreateTheme({ ...baseOptions, ...options });
 }

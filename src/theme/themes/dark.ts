@@ -24,6 +24,9 @@ const darkTheme = buildTheme({
     },
     MuiPaper: {
       styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+        },
         outlined: {
           borderColor: palette.gray[700],
         },
