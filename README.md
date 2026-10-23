@@ -1,5 +1,7 @@
 # Transaction Dispute Portal Web
 
+[![CI](https://github.com/McebisiMK/transaction-dispute-portal-web/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/McebisiMK/transaction-dispute-portal-web/actions/workflows/ci.yml)
+
 The React front end for the [Transaction Dispute Portal](https://github.com/McebisiMK/TransactionDisputePortal). Customers view their transactions, dispute them and follow their dispute history. Agents review and resolve disputes.
 
 > **Just want to run it?** The whole stack (web app, API, Keycloak and SQL Server) starts with one `docker compose up` from the API repository. Follow its [quick start](https://github.com/McebisiMK/TransactionDisputePortal#quick-start), which clones both repositories side by side.
